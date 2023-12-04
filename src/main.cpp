@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <matplot/matplot.h>
 #include <qpp/qpp.h>
+#include "Encoding.h"
 
 using namespace matplot;
 
@@ -23,7 +24,7 @@ int main() {
     // matplot::plot(x, y);
     // matplot::show();
 
-    std::vector<double> x = iota(0, 10, 100);
+    std::vector<double> x = matplot::iota(0, 10, 100);
     std::vector<double> y = {20, 30, 45, 40, 60, 65, 80, 75, 95, 90};
     std::vector<double> err(y.size(), 10.);
     errorbar(x, y, err);

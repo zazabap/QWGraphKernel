@@ -1,13 +1,21 @@
-
-
 cmake_minimum_required(VERSION 3.0)
 project(YourProjectName)
 set(CMAKE_CXX_STANDARD 17)
-find_package(qpp REQUIRED)
+
+# Define directories
+set(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
 # Add your source files
-add_executable(main src/main.cpp)
-# Link any necessary libraries (e.g., Matplotplusplus)
+add_executable(main ${SRC_DIR}/main.cpp)
+
+# Include directories and libraries
+target_include_directories(main PRIVATE ${LIB_DIR})
+add_library(Encoding ${LIB_DIR}/Encoding.cpp ${LIB_DIR}/Encoding.h)
+target_link_libraries(main PRIVATE Encoding)
+
+# Link any necessary dependencies
+find_package(qpp REQUIRED)
 include_directories(/usr/local/include/eigen3/)
 add_subdirectory(matplotplusplus)
 target_link_libraries(main PUBLIC matplot)
