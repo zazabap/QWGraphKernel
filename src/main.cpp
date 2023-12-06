@@ -1,3 +1,9 @@
+///////////////////////////////////////
+// Author: Shiwen An 
+// Date: 2023-12-6
+// Purpose: Don't really know what to 
+//          implement here 
+////////////////////////////////////////
 #include <iostream>
 #include <Eigen/Dense>
 #include <matplot/matplot.h>

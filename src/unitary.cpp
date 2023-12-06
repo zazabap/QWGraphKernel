@@ -1,3 +1,10 @@
+///////////////////////////////////////
+// Author: Shiwen An 
+// Date: 2023-12-5
+// Purpose: Create unitary evolution 
+//          of the quantum state
+////////////////////////////////////////
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <qpp/qpp.h>
@@ -5,11 +12,6 @@
 #include "Circuit.h"
 
 
-////////
-// Author: Shiwen An 
-// Date: 2023-12-5
-// Purpose: Create unitary evolution of the quantum state
-///////
 using namespace qpp;
 
 //
@@ -18,19 +20,6 @@ using namespace qpp;
 ket applyRotation(const cmat& gate, const ket& state) {
     ket evolved_state = gate*state;
     return evolved_state;
-}
-
-//
-// Kronecker Delta 
-//
-cmat tensorProduct(const cmat& X, const cmat& Y){
-    cmat tensor = kron(X,Y);
-    return tensor;
-}
-
-cmat kron4(const cmat& A, const cmat& B, 
-           const cmat& C, const cmat& D){
-     return kron(kron(kron(A,B),C),D);
 }
 
 // 
@@ -42,18 +31,18 @@ cmat kron4(const cmat& A, const cmat& B,
 //     return evolved_state;
 // }
 
-
-int main() {
-
+// Save some example for matrix eigen3
+void eigenExample(){
     std::cout << "Hello, World!" << std::endl;
-
     Eigen::MatrixXd mat(2, 2);
     mat << 1, 2, 3, 4;
     Eigen::VectorXd vec(2);
     vec << 5, 6;
     Eigen::VectorXd result = mat * vec;
     std::cout << "Matrix:\n" << mat << "\nVector:\n" << vec << "\nResult:\n" << result << std::endl;
+}
 
+int main() {
     std::cout<<"Quantum State Evolution over matrix"<<std::endl;
     ket psi = st.z0;
     cmat X = gt.X;
@@ -65,13 +54,12 @@ int main() {
     std::cout << "Evolved state after applying the Pauli-X gate: \n";
     std::cout << disp(psi) << std::endl;
 
-
-
     // Define a quantum state (for example, |0⟩ state)
     psi = st.z0;
 
     std::cout << "Before \n";
     std::cout << disp(psi) << std::endl;
+    auto a = new Circuit();
 
     // Perform the unitary evolution by applying the rotational gate using the function
     // ket evolved_state = applyRotation(Rz, psi);
@@ -80,47 +68,52 @@ int main() {
     // std::cout << "Evolved state after applying rotational gate around Z-axis: \n";
     // std::cout << disp(evolved_state) << std::endl;
 
-    // Define two quantum gates (for example, Pauli-X and Pauli-Y)
-    cmat Y = gt.Y; // Pauli-Y gate
-    cmat Z = gt.Z; // Pauli-Y gate
-
-
-    auto tensor = tensorProduct(X, Y);
-    std::cout<<"X gate: \n";
-    std::cout << disp(X) << std::endl;
-    std::cout<<"Y gate: \n";
-    std::cout << disp(Y) << std::endl;
-    std::cout<<"Z gate: \n";
-    std::cout << disp(Z) << std::endl;
-    std::cout<<"X Y tensor: \n";
-    std::cout << disp(tensor) << std::endl;
-
-    // display the 4 qubits state
-    auto ket0 = st.z0;
-    auto psi_4 = kron(kron(kron(ket0, ket0), ket0), ket0);
-    std::cout<<"Tensor Tensor Tensor Product\n";
-    std::cout<<"\n"<<disp(psi_4)<<std::endl;
-
     // Create a Unitary Hadmard gate
-    cmat H_4 = kron(kron(kron(gt.H, gt.H), gt.H), gt.H);
-    // Create a Unitary X gate
-    cmat X_4 = kron(kron(kron(gt.X, gt.X), gt.X ), gt.X);
-    // Create a Control Gate 
+    cmat H_4 = a->kron4(gt.H, gt.H, gt.H, gt.H);
+    cmat X_4 = a->kron4(gt.X, gt.X, gt.X, gt.X);
     double angle = M_PI / 4; // Example: rotate by 45 degrees
     cmat Rz = gt.RZ(angle); // Rotational gate around Z-axis
     auto U_2 = gt.Id(2);
-    cmat C_R =  kron4( U_2, U_2, U_2, Rz);
+    cmat C_R = a->controlledRz4q(angle);
     std::cout<<disp(C_R)<<"\n";
+    auto CC = H_4 * X_4 * C_R*X_4*H_4;
 
-    auto a = new Circuit();
+    // Measurement based on the C_Zz C_R above
+    auto measured = measure(CC, gt.Z, {0});
+    std::cout << ">> Measurement result: " << std::get<RES>(measured) << '\n';
+    std::cout << ">> Probabilities: ";
+    std::cout << disp(std::get<PROB>(measured), ", ") << '\n';
+    std::cout << ">> Resulting states:\n";
+    for (auto&& it : std::get<ST>(measured))
+        std::cout << disp(it) << "\n\n";
 
-    cmat C_Zz = a->controlledRz4q(angle);
-    std::cout<<disp(C_Zz)<<"\n";
+    // Initialize the quantum circuit
+    QCircuit circuit;
 
+    // Add qubits to the circuit
+    circuit.add_qudit(); // Add qubit 0
+    circuit.add_qudit(); // Add qubit 1
 
-    // auto U_4 = X_4 * H_4*C_R;
-    // std::cout<<disp(U_4)<<"\n";
-    // std::cout<<disp(psi_4*U_4)<<"\n";
-    // std::cout<<"trace"<<trace(psi_4*U_4)<<"\n";
+    // Apply Hadamard gates to qubits
+    circuit.gate(gt.H, 0); // Apply Hadamard gate to qubit 0
+    circuit.gate(gt.H, 1); // Apply Hadamard gate to qubit 1
+
+    circuit.gate(Rz, 0); // Apply Hadamard gate to qubit 0
+    circuit.gate(Rz, 1); // Apply Hadamard gate to qubit 1
+    
+    circuit.gate(gt.CNOT, 0,1);
+
+    auto cc = circuit.get_gate_depth();
+
+    QEngine qe(circuit);
+    qe.execute();
+
+    // Display the resulting state
+    std::cout << "Resulting state after applying Hadamard gates to both qubits:\n";
+    std::cout << disp(cc) << std::endl;
+    std::cout << circuit.get_resources() <<std::endl;
+    qpp::idx nq_c = 2 ;
+    std::vector<idx> counting_qubits(nq_c);
+    delete a;
     return 0;
 }

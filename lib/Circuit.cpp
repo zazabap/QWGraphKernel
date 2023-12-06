@@ -45,3 +45,8 @@ cmat Circuit::controlledRz4q(double angle) {
 
     return controlled_Rz;
 }
+
+cmat Circuit::kron4(const cmat& A, const cmat& B, 
+           const cmat& C, const cmat& D){
+     return kron(kron(kron(A,B),C),D);
+}

@@ -22,6 +22,9 @@ public:
     // Function to use 4 qubits in Calculation
     cmat controlledRz4q(double angle);
 
+    cmat kron4(const cmat& A, const cmat& B, 
+           const cmat& C, const cmat& D);
+
 private:
     std::vector<cmat> gates_;
     std::vector<std::vector<idx>> qubit_indices_;
