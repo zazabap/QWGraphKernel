@@ -12,15 +12,12 @@ This repository provides implementations of Quantum Walk Graph Kernels using dif
 
 ### Quantum++ (C++)
 
-- `qpp_quantum_walk_kernel.cpp`: C++ implementation using Quantum++ library.
+- `main.cpp`: C++ implementation using Quantum++ library.
+- `unitary.cpp` : Circuit Representation for fixed time CTQW
 
 ### Qiskit (Python)
 
-- `qiskit_quantum_walk_kernel.py`: Python implementation using Qiskit library.
-
-### ProjectQ (Python)
-
-- `projectq_quantum_walk_kernel.py`: Python implementation using ProjectQ library.
+- `main.py`: Python implementation using Qiskit library.
 
 ## Usage
 
