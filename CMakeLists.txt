@@ -21,7 +21,8 @@ add_library(Circuit ${LIB_DIR}/Circuit.cpp ${LIB_DIR}/Circuit.h)
 
 # Link External dependencies
 find_package(qpp REQUIRED)
-include_directories(/usr/local/include/eigen3/)
+
+# include_directories(/usr/local/include/eigen3/)
 add_subdirectory(matplotplusplus)
 target_link_libraries(main PUBLIC matplot)
 
@@ -38,7 +39,7 @@ target_link_libraries(qpe PRIVATE Encoding)
 target_link_libraries(qpe PRIVATE Circuit)
 target_link_libraries(qpe PUBLIC ${QPP_LINK_DEPS} libqpp)
 
+target_link_libraries(Encoding PUBLIC ${QPP_LINK_DEPS} libqpp)
 target_link_libraries(Circuit PUBLIC ${QPP_LINK_DEPS} libqpp)
-
 
 # link unitary with qpp 

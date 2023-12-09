@@ -24,6 +24,10 @@ public:
 
     cmat kron4(const cmat& A, const cmat& B, 
            const cmat& C, const cmat& D);
+    
+    // Quantum Jensen-Shannon Divergen Kernel 
+    // Give two quantum states and return a value
+    double QJSK(const ket& rho, const ket& sigma);
 
 private:
     std::vector<cmat> gates_;

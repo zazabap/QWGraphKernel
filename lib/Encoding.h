@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <qpp/qpp.h>
+
 using namespace std;
 
 class Encoding {
@@ -15,6 +17,10 @@ public:
     void setNumber(int num);
     void setString(string str);
     void display();
+    void QuantumEncoding();
+    void AmplitudeEncoding();
+    void BasisEncoding();
+    void BlockEncoding();
 };
 
 #endif

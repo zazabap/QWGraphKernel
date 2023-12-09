@@ -50,3 +50,8 @@ cmat Circuit::kron4(const cmat& A, const cmat& B,
            const cmat& C, const cmat& D){
      return kron(kron(kron(A,B),C),D);
 }
+
+double QJSK(const ket& rho, const ket& sigma){
+    
+}
+
