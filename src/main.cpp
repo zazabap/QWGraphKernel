@@ -9,6 +9,7 @@
 #include <matplot/matplot.h>
 #include <qpp/qpp.h>
 #include "Encoding.h"
+#include "CppTest.h"
 
 using namespace matplot;
 
