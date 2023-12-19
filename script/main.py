@@ -26,6 +26,7 @@ print(unitary_matrix)
 # Create a quantum circuit with two qubits
 bell_circuit = QuantumCircuit(2, 2)
 
+
 # Apply a Hadamard gate to the first qubit
 bell_circuit.h(0)
 
