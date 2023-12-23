@@ -14,23 +14,19 @@ import random
 import matplotlib.pyplot as plt
 from qiskit.result import Counts
 
-
-
-
-circ = QuantumCircuit(3)
-# Add a H gate on qubit $q_{0}$, putting this qubit in superposition.
-circ.h(0)
-# Add a CX (CNOT) gate on control qubit $q_{0}$ and target qubit $q_{1}$, putting
-# the qubits in a Bell state.
-circ.cx(0, 1)
-# Add a CX (CNOT) gate on control qubit $q_{0}$ and target qubit $q_{2}$, putting
-# the qubits in a GHZ state.
-circ.cx(0, 2)
-
-circ.draw('mpl')
-
-circuit_drawer(circ, output='mpl', filename='HCXCX.png')  # 'mpl' for Matplotlib output
-print(circ)
+def circInstance():
+    circ = QuantumCircuit(3)
+    # Add a H gate on qubit $q_{0}$, putting this qubit in superposition.
+    circ.h(0)
+    # Add a CX (CNOT) gate on control qubit $q_{0}$ and target qubit $q_{1}$, putting
+    # the qubits in a Bell state.
+    circ.cx(0, 1)
+    # Add a CX (CNOT) gate on control qubit $q_{0}$ and target qubit $q_{2}$, putting
+    # the qubits in a GHZ state.
+    circ.cx(0, 2)
+    circ.draw('mpl')
+    circuit_drawer(circ, output='mpl', filename='HCXCX.png')  # 'mpl' for Matplotlib output
+    print(circ)
 
 # Define a simple quantum circuit for implementation
 # where its time evolution to be solidify
@@ -45,8 +41,9 @@ def CTQW(t):
     circCTQW.x(2)
     circCTQW.x(3)
     
-    theta = np.pi /2 *t
-    circCTQW.mcrx(theta,[0,1,2],3)
+    # theta = np.pi /2 *t
+    # circCTQW.mcrx(theta,[0,1,2],3)
+    circCTQW.mcrz(np.pi *t, [0,1,2],3)
 
     circCTQW.x(0)
     circCTQW.x(1)
@@ -58,7 +55,6 @@ def CTQW(t):
     circCTQW.h(3)
 
     circCTQW.measure([0, 1, 2, 3], [0, 1, 2, 3])
-
     # circuit_drawer(circCTQW, output='mpl', filename='CTQW.png')  # 'mpl' for Matplotlib output
     # print(circCTQW)
 
@@ -76,16 +72,15 @@ double_list = [random.uniform(-1, 1) for _ in range(50)]
 plt.figure(figsize=(10, 6))
 for i in double_list:
     counts = CTQW(i)
-    # print(counts)
-    # print(type(counts))
-    # print(counts.keys())
-    # print(counts.values())
-
     outcomes = list(counts.keys())
     counts = list(counts.values())
+    sum_values = sum(counts)
+
+    # Normalize the list by dividing each value by the sum
+    normalized_counts = [val / sum_values for val in counts]
     print(outcomes)
     print(counts)
-    plt.bar(outcomes, counts, alpha=0.5)
+    plt.bar(outcomes, normalized_counts, alpha=0.5)
     # plt.bar(outcomes, counts, alpha=0.5, label=f'Experiment {1+i}')
 
 plt.xlabel('Outcomes')
@@ -96,24 +91,24 @@ plt.tight_layout()
 plt.show()
 
 
-# theta = np.pi/2
+theta = np.pi/2
 
-# # Create a quantum circuit with 4 qubits
-# qc = QuantumCircuit(4)
+# Create a quantum circuit with 4 qubits
+qc = QuantumCircuit(4)
 
-# # Apply controlled Rx gate with 4th qubit as the control
-# control_qubits = [0, 1, 2]  # Control qubits (first three qubits)
-# target_qubit = 3  # Target qubit (fourth qubit)
-# qc.mcrx(theta, control_qubits, target_qubit)
+# Apply controlled Rx gate with 4th qubit as the control
+control_qubits = [0, 1, 2]  # Control qubits (first three qubits)
+target_qubit = 3  # Target qubit (fourth qubit)
+qc.mcrx(theta, control_qubits, target_qubit)
 
-# matrix = Operator(qc).data
-# formatted_matrix = np.vectorize(lambda x: np.around(x.real) + np.around(x.imag) * 1j)(matrix)
-# trace = np.trace(formatted_matrix)
+matrix = Operator(qc).data
+formatted_matrix = np.vectorize(lambda x: np.around(x.real) + np.around(x.imag) * 1j)(matrix)
+trace = np.trace(formatted_matrix)
 
-# # View the circuit
-# print("Quantum Circuit:")
-# circuit_drawer(qc, output='mpl', filename='Rxpi3.png')  # 'mpl' for Matplotlib output
-# print(qc)
-# print(formatted_matrix)
-# print(trace)
+# View the circuit
+print("Quantum Circuit:")
+circuit_drawer(qc, output='mpl', filename='Rxpi3.png')  # 'mpl' for Matplotlib output
+print(qc)
+print(formatted_matrix)
+print(trace)
 
