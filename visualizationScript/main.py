@@ -18,4 +18,10 @@ p_A = '../data/PROTEINS/PROTEINS_A.txt'
 p_node = '../data/PROTEINS/PROTEINS_graph_indicator.txt'
 p_node_label = '../data/PROTEINS/PROTEINS_node_labels.txt'
 
-quickView(mutag_A, mutag_node, mutag_node_label)
+e_A = '../data/ENZYMES/ENZYMES_A.txt' 
+e_node = '../data/ENZYMES/ENZYMES_graph_indicator.txt'
+e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
+
+
+quickView(e_A, e_node, e_node_label)
+A_list = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label)
