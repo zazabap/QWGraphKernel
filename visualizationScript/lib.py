@@ -7,8 +7,10 @@
 
 import networkx as nx
 import pandas as pd
+import numpy as np
 import linecache
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 # A Function to visualize 
 # ENZYMES MUTAG PROTEINS
@@ -73,6 +75,29 @@ def adjacencyMatrices(file_A, file_node, file_node_label):
                     node2: {'label': linecache.getline(file_node_label, node2)}}}
         nx.set_node_attributes(G, node_attr)
 
-    for i in range(3):
-        print(A_list[i])
     return A_list
+
+# Self defined random walk function 
+# on graph define the steps on adj_matrix
+def random_walk_steps(adj_matrix, steps, num_walks):
+    n = len(adj_matrix)
+    steps_taken = np.zeros(n, dtype=int)
+
+    for _ in range(num_walks):
+        current_position = np.random.randint(n) # Starting node
+
+        for _ in range(steps):
+            # Get neighbors of the current node
+            neighbors = [i for i in range(n) if adj_matrix[current_position][i] == 1]
+            
+            if not neighbors:
+                break  # If no neighbors, break the walk
+
+            # Move to a random neighbor
+            current_position = np.random.choice(neighbors)
+
+            # Increment steps taken for the current node
+            steps_taken[current_position] += 1
+
+    return steps_taken
+
