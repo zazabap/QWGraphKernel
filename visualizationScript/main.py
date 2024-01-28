@@ -38,3 +38,6 @@ H = qml.pauli_decompose(A) # Simple and fast solution
 
 
 print(H)
+
+# explanation for the process. 
+# https://quantumcomputing.stackexchange.com/questions/11899/how-can-i-decompose-a-matrix-in-terms-of-pauli-matrices
