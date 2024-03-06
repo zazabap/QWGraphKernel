@@ -36,8 +36,20 @@ import pennylane as qml
 
 H = qml.pauli_decompose(A) # Simple and fast solution
 
+print(H)  # The Hamiltonian of the graph
+print("Obtain circuit") # The coefficient for the circuits
 
-print(H)
+
+dev = qml.device('default.qubit', wires=16)
+
+@qml.qnode(dev)
+def circuit(params):
+    qml.BasisState(np.array([1, 1, 1, 1,0,0, 0, 0, 1, 1, 1, 1,0,0, 0, 0]), wires=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
+    qml.DoubleExcitation(params, wire s=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
+    return qml.expval(H)
+
+params = np.array(0.20885146442480412, requires_grad=True)
+circuit(params)
 
 # explanation for the process. 
 # https://quantumcomputing.stackexchange.com/questions/11899/how-can-i-decompose-a-matrix-in-terms-of-pauli-matrices
