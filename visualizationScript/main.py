@@ -33,23 +33,59 @@ A = A_list[6]
 # https://docs.pennylane.ai/en/stable/code/api/pennylane.pauli_decompose.html
 
 import pennylane as qml
+from pennylane import ApproxTimeEvolution
 
 H = qml.pauli_decompose(A) # Simple and fast solution
 
 print(H)  # The Hamiltonian of the graph
-print("Obtain circuit") # The coefficient for the circuits
+print("Obtain circuit coefficients") # The coefficient for the circuits
+print(H.coeffs)
+print("Time evolution of the Hamiltonian System") # time evolution of H 
+time = 0
+n = 100
+qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
 
 
-dev = qml.device('default.qubit', wires=16)
+def test0():
+    n_wires = 2
+    wires = range(n_wires)
 
-@qml.qnode(dev)
-def circuit(params):
-    qml.BasisState(np.array([1, 1, 1, 1,0,0, 0, 0, 1, 1, 1, 1,0,0, 0, 0]), wires=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
-    qml.DoubleExcitation(params, wire s=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
-    return qml.expval(H)
+    dev = qml.device('default.qubit', wires=n_wires)
 
-params = np.array(0.20885146442480412, requires_grad=True)
-circuit(params)
+    coeffs = [1, 1]
+    obs = [qml.PauliX(0), qml.PauliX(1)]
+    hamiltonian = qml.Hamiltonian(coeffs, obs)
+
+    @qml.qnode(dev)
+    def circuit(time):
+        ApproxTimeEvolution(hamiltonian, time, 1)
+        return [qml.expval(qml.PauliZ(i)) for i in wires]
+    
+    print(circuit(1))
+
+test0()
+
+def test1():
+    n_wires = 4
+    wires = range(n_wires)
+    dev = qml.device('default.qubit', wires=n_wires)
+
+    @qml.qnode(dev)
+    def circuit(time):
+        ApproxTimeEvolution(H,time, 1)
+        return [qml.expval(qml.PauliZ(i)) for i in wires]
+
+    print(circuit(1))
+
+test1()
+
+# def circuit(params):
+#     qml.BasisState(np.array([1, 1, 1, 1,0,0, 0, 0, 1, 1, 1, 1,0,0, 0, 0]), wires=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
+#     qml.DoubleExcitation(params, wire s=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
+#     return qml.expval(H)
+
+# params = np.array(0.20885146442480412, requires_grad=True)
+# circuit(params)
 
 # explanation for the process. 
 # https://quantumcomputing.stackexchange.com/questions/11899/how-can-i-decompose-a-matrix-in-terms-of-pauli-matrices
