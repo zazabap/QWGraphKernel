@@ -7,28 +7,21 @@ import pennylane as qml
 from pennylane import ApproxTimeEvolution
 
 # Example
-def test0():
-    n_wires = 2
-    wires = range(n_wires)
-
-    dev = qml.device('default.qubit', wires=n_wires)
-
-    coeffs = [1, 1]
-    obs = [qml.PauliX(0), qml.PauliX(1)]
-    hamiltonian = qml.Hamiltonian(coeffs, obs)
-
-    @qml.qnode(dev)
-    def circuit(time):
-        ApproxTimeEvolution(hamiltonian, time, 1)
-        return [qml.expval(qml.PauliZ(i)) for i in wires]
-
-    print(circuit(1))
-
-test0()
 
 # Time Evolution based on hamiltonian
-def getTimeEvolution(H,t,n):
-    n_wires = 4
+def getTimeEvolution(H,t,n, w):
+    """
+    Get the time evolution for the Hamiltonian System
+
+    Args:
+        H (): Hamiltonian Object for exp(-iHt)
+        t (float): Time evolution for exp(-iHt)
+        n (int): Division for the ApproxTimeEvolution exp(-iHt/n)*exp(-iHt/n)
+        w (int): Number of wires in the Circuit.
+    Returns:
+        list: Tensor for the time evolution
+    """
+    n_wires = w
     wires = range(n_wires)
     dev = qml.device('default.qubit', wires=n_wires)
 
@@ -40,8 +33,19 @@ def getTimeEvolution(H,t,n):
     return circuit(t,n)
 
 # Density Matrix calculation
-def getDensityMatrix(H,t,n):
-    n_wires = 8
+def getDensityMatrix(H,t,n, w):
+    """
+    Get the Density Matrix for the Hamiltonian System
+
+    Args:
+        H (): Hamiltonian Object for exp(-iHt)
+        t (float): Time evolution for exp(-iHt)
+        n (int): Division for the ApproxTimeEvolution exp(-iHt/n)*exp(-iHt/n)
+        w (int): Number of wires in the Circuit.
+    Returns:
+        Matrix based on the eigenvectors
+    """
+    n_wires = w
     wires = range(n_wires)
     dev = qml.device('default.qubit', wires=n_wires)
 
@@ -53,8 +57,19 @@ def getDensityMatrix(H,t,n):
     return circuit(t,n)
 
 # Von Neuman Entropy for the density matrix
-def getEntropy(H,t,n):
-    n_wires = 4
+def getEntropy(H,t,n,w):
+    """
+    Get the Density Matrix for the Hamiltonian System
+
+    Args:
+        H (): Hamiltonian Object for exp(-iHt)
+        t (float): Time evolution for exp(-iHt)
+        n (int): Division for the ApproxTimeEvolution exp(-iHt/n)*exp(-iHt/n)
+        w (int): Number of wires in the Circuit.
+    Returns:
+        float: Von Neuman Entropy Value 
+    """    
+    n_wires = w
     wires = range(n_wires)
     dev = qml.device('default.qubit', wires=n_wires)
 
