@@ -5,6 +5,7 @@
 ################################################    
 
 from lib import *
+from pl import *
 # from torch_geometric.data import Data
 # from torch_geometric.loader import DataLoader
 
@@ -46,39 +47,22 @@ n = 100
 qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
 
 
-def test0():
-    n_wires = 2
-    wires = range(n_wires)
+r1 = test1(1,10)
+r2 = test1(2,5)
+r2 = test1(3,5)
+r3 = []
+for i in range(len(r1)):
+    r3.append(r1[i]*r2[i])
+print(r3)
 
-    dev = qml.device('default.qubit', wires=n_wires)
+r4 = test2(2,5)
+r4 = test2(2,6)
+r4 = test2(2,7)
 
-    coeffs = [1, 1]
-    obs = [qml.PauliX(0), qml.PauliX(1)]
-    hamiltonian = qml.Hamiltonian(coeffs, obs)
-
-    @qml.qnode(dev)
-    def circuit(time):
-        ApproxTimeEvolution(hamiltonian, time, 1)
-        return [qml.expval(qml.PauliZ(i)) for i in wires]
-    
-    print(circuit(1))
-
-test0()
-
-def test1():
-    n_wires = 4
-    wires = range(n_wires)
-    dev = qml.device('default.qubit', wires=n_wires)
-
-    @qml.qnode(dev)
-    def circuit(time):
-        ApproxTimeEvolution(H,time, 1)
-        return [qml.expval(qml.PauliZ(i)) for i in wires]
-
-    print(circuit(1))
-
-test1()
-
+# von neuman entropy of the matrix
+r5 = test3(2,5)
+r6 = test3(2,6)
+r7 = test3(2,7)
 # def circuit(params):
 #     qml.BasisState(np.array([1, 1, 1, 1,0,0, 0, 0, 1, 1, 1, 1,0,0, 0, 0]), wires=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
 #     qml.DoubleExcitation(params, wire s=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
