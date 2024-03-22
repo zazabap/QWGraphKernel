@@ -31,10 +31,14 @@ A_list = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label)
 
 A = A_list[6]
 
+A, wires =  appendZeros(A_list[7])
+print(A)
+print(len(A))
+
 # https://docs.pennylane.ai/en/stable/code/api/pennylane.pauli_decompose.html
 
 H = qml.pauli_decompose(A) # Simple and fast solution
-
+H1 = qml.pauli_decompose(A_list[6])
 print(H)  # The Hamiltonian of the graph
 print("Obtain circuit coefficients") # The coefficient for the circuits
 print(H.coeffs)
@@ -43,11 +47,15 @@ time = 0
 n = 100
 qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
 
+r1 = getTimeEvolution(H, 1,10, wires)
+r11 = getTimeEvolution(H, 1,20, wires)
 
-r1 = getTimeEvolution(H, 1,10, 4)
-r11 = getTimeEvolution(H, 1,20, 4)
-r2 = getDensityMatrix(H, 1,10, 4)
-r3 = getEntropy(H,1,10, 4 )
+r2 = getDensityMatrix(H, 1,10, wires)
+r22 = getDensityMatrix(H1, 1,10, wires)
+print("Density Matrix")
+print(r2+r22)
+
+r3 = getEntropy(H,1,10, wires )
 r4 = []
 for i in range(len(r1)):
     r4.append(r1[i]*r11[i])
