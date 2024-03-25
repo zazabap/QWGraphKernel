@@ -118,3 +118,27 @@ def appendZeros(M):
     O[:m, :m] = M
 
     return O,n
+
+def von_neumann_entropy(rho):
+    """
+    Calculates the von Neumann entropy of a density matrix rho.
+
+    Parameters:
+    - rho: numpy array, density matrix representing the quantum state
+
+    Returns:
+    - S: float, von Neumann entropy of the density matrix rho
+
+    The von Neumann entropy is defined as S = -Tr(R), where R = rho * log2(rho).
+
+    Example:
+    >>> rho = np.array([[0.5, 0.5],
+    ...                 [0.5, 0.5]])
+    >>> entropy = von_neumann_entropy(rho)
+    >>> print(entropy)
+    1.0
+    """
+    from scipy import linalg as la
+    R = rho*(la.logm(rho)/la.logm(np.matrix([[2]])))
+    S = -np.matrix.trace(R)
+    return(S)

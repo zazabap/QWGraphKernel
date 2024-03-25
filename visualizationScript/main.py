@@ -6,6 +6,7 @@
 
 from lib import *
 from pl import *
+from kernel import * 
 # from torch_geometric.data import Data
 # from torch_geometric.loader import DataLoader
 
@@ -54,6 +55,8 @@ r2 = getDensityMatrix(H, 1,10, wires)
 r22 = getDensityMatrix(H1, 1,10, wires)
 print("Density Matrix")
 print(r2+r22)
+print("Von Neuman Entropy")
+print(von_neumann_entropy((r2+r22)/2))
 
 r3 = getEntropy(H,1,10, wires )
 r4 = []
