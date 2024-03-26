@@ -6,7 +6,8 @@
 
 from lib import *
 from pl import *
-from kernel import * 
+from kernel import *
+from lib import adjacencyMatrices 
 # from torch_geometric.data import Data
 # from torch_geometric.loader import DataLoader
 
@@ -15,6 +16,7 @@ from kernel import *
 mutag_A = '../data/MUTAG/MUTAG_A.txt' 
 mutag_node = '../data/MUTAG/MUTAG_graph_indicator.txt'
 mutag_node_label = '../data/MUTAG/MUTAG_node_labels.txt'
+mutag_graph_label = '../data/MUTAG/MUTAG_graph_labels.txt'
 
 p_A = '../data/PROTEINS/PROTEINS_A.txt' 
 p_node = '../data/PROTEINS/PROTEINS_graph_indicator.txt'
@@ -24,13 +26,15 @@ e_A = '../data/ENZYMES/ENZYMES_A.txt'
 e_node = '../data/ENZYMES/ENZYMES_graph_indicator.txt'
 e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 
-# quickView(mutag_A, mutag_node, mutag_node_label)
+quickView(mutag_A, mutag_node, mutag_node_label)
 # quickView(e_A, e_node, e_node_label)
 # quickView(p_A, p_node, p_node_label)
 
-A_list = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label)
+A_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 
 A = A_list[6]
+print(len(A_list))
+print(len(y))
 
 A, wires =  appendZeros(A_list[7])
 print(A)
@@ -56,7 +60,8 @@ r22 = getDensityMatrix(H1, 1,10, wires)
 print("Density Matrix")
 print(r2+r22)
 print("Von Neuman Entropy")
-print(von_neumann_entropy((r2+r22)/2))
+# print(von_neumann_entropy((r2+r22)/2))
+print(QJSK(r2,r22))
 
 r3 = getEntropy(H,1,10, wires )
 r4 = []

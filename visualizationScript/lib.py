@@ -15,9 +15,13 @@ from collections import defaultdict
 
 # A function converting 
 # graph structures to numpy matrix
-def adjacencyMatrices(file_A, file_node, file_node_label):
+def adjacencyMatrices(file_A, file_node, file_node_label, file_graph_labels):
     data = pd.read_csv(file_A, header=None, names=['nodes', 'edges'])
-
+    lines = []
+    with open(file_graph_labels, 'r') as file:
+        # Read lines and strip whitespace
+        lines = [line.strip() for line in file]
+    y = []
     # Create a graph
     G = nx.Graph()
     A_list = []
@@ -28,6 +32,7 @@ def adjacencyMatrices(file_A, file_node, file_node_label):
         if int(linecache.getline(file_node, node1)) == node_pre :
             G.add_edge(node1, node2)
         else: 
+            y.append(lines[node_pre-1])
             node_pre = int(linecache.getline(file_node, node1))
             A_list.append(nx.adjacency_matrix(G).todense())
             G = nx.Graph()
@@ -37,7 +42,7 @@ def adjacencyMatrices(file_A, file_node, file_node_label):
                     node2: {'label': linecache.getline(file_node_label, node2)}}}
         nx.set_node_attributes(G, node_attr)
 
-    return A_list
+    return A_list, y
 
 # A Function to visualize 
 # ENZYMES MUTAG PROTEINS
@@ -47,7 +52,7 @@ def quickView(file_A, file_node, file_node_label):
     # Create a graph
     G = nx.Graph()
     G_list = []
-    node_pre = 2
+    node_pre = 1
     # Add edges to the graph based on the adjacency matrix
     for _, row in data.iterrows():
         node1, node2 = row['nodes'], row['edges']

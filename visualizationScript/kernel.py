@@ -8,7 +8,6 @@ from pl import *
 from sklearn.datasets import make_classification
 
 x,y = make_classification(n_samples = 1000)
-print(x.shape, y.shape)
 
 def linear_kernel(x_i, x_j):
     return x_i.dot(x_j.T)
