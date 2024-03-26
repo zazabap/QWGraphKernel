@@ -26,7 +26,7 @@ e_A = '../data/ENZYMES/ENZYMES_A.txt'
 e_node = '../data/ENZYMES/ENZYMES_graph_indicator.txt'
 e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 
-quickView(mutag_A, mutag_node, mutag_node_label)
+# quickView(mutag_A, mutag_node, mutag_node_label)
 # quickView(e_A, e_node, e_node_label)
 # quickView(p_A, p_node, p_node_label)
 
