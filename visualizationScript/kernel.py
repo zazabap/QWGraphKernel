@@ -107,14 +107,20 @@ def von_neumann_entropy(rho):
     return(S)
 
 # self defined kenerl 
-def QJSK(rho,sigma):
-    # phi = []
-    # for i in range(len(rho)):
-    #     t = []
-    #     for j in range(len(rho[i])):
-    #         t.append((rho[i][j]+sigma[i][j])/2)
-    #     phi.append(t)
-    s = von_neumann_entropy((rho+sigma)/2)
+def QJSD(rho,sigma):
+    phi = []
+    for i in range(len(rho)):
+        t = []
+        for j in range(len(rho[i])):
+            t.append((rho[i][j]+sigma[i][j])/2)
+        phi.append(t)
+    s = von_neumann_entropy(phi)
     a = von_neumann_entropy(rho)/2
     b = von_neumann_entropy(sigma)/2
     return s-a-b
+
+def QJSK(rho,sigma):
+    r = []
+    for i in range(len(rho)):
+        r.append(QJSD(rho[i],sigma[i]))
+    return r

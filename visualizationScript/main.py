@@ -63,8 +63,14 @@ for i in range(len(H_list)):
 print(rho_list)
 # example for running linear kernel
 
-clf1 = SVC(kernel = QJSK)
-clf1.fit(rho_list,y)
+
+# clf1 = SVC(kernel = QJSK)
+# clf1.fit(rho_list,y)
+
+clf1 = SVC(kernel = 'precomputed')
+clf1.fit(QJSK(rho_list,rho_list),y)
+
+
 print(f'Accuracy on Custom Kernel: {accuracy_score(y, clf1.predict(rho_list))}')
 
 # https://docs.pennylane.ai/en/stable/code/api/pennylane.pauli_decompose.html

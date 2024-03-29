@@ -65,7 +65,7 @@ print("Density Matrix")
 print(r2+r22)
 print("Von Neuman Entropy")
 # print(von_neumann_entropy((r2+r22)/2))
-print(QJSK(r2,r22))
+print(QJSD(r2,r22))
 
 # r3 = getEntropy(H,1,10, wires )
 # r4 = []
