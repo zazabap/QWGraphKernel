@@ -119,6 +119,39 @@ def appendZeros(M):
 
     return O,n
 
+def resizeMatrix(M,n):
+    """
+    Appends zeros to a given matrix to resize it to the next power of 2 in both dimensions.
+
+    Parameters:
+    - M: numpy array, input matrix of shape (m, m)
+    - n: 2**n the resize of matrix
+
+    Returns:
+    - O: numpy array, output matrix of shape (2^n, 2^n), where n is the smallest integer such that 2^n > m.
+      The elements of M are copied into the top-left corner of O, with the remaining elements filled with zeros.
+
+    Example:
+    >>> M = np.array([[1, 2],
+    ...               [3, 4]])
+    >>> O = append_zeros_to_matrix(M)
+    >>> print(O)
+    [[1. 2. 0. 0.]
+     [3. 4. 0. 0.]
+     [0. 0. 0. 0.]
+     [0. 0. 0. 0.]]
+    """
+    m = len(M)
+    new_size = 2 ** n
+
+    # Create a new matrix O of size (2^n) x (2^n) filled with zeros
+    O = np.zeros((new_size, new_size), dtype=M.dtype)
+
+    # Copy elements of M into the top-left corner of O
+    O[:m, :m] = M
+
+    return O
+
 def von_neumann_entropy(rho):
     """
     Calculates the von Neumann entropy of a density matrix rho.

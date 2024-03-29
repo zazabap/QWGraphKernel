@@ -8,6 +8,9 @@ from lib import *
 from pl import *
 from kernel import *
 from lib import adjacencyMatrices 
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
 # from torch_geometric.data import Data
 # from torch_geometric.loader import DataLoader
 
@@ -32,50 +35,65 @@ e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 
 A_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 
-A = A_list[6]
+# print 
+print("Length of the graph:")
 print(len(A_list))
 print(len(y))
 
 A, wires =  appendZeros(A_list[7])
-print(A)
-print(len(A))
+
+# Check the largest wires is 5 
+n_wires = 5
+for i in range(len(A_list)):
+    A_list[i] = resizeMatrix(A_list[i],n_wires)
+    
+print(n_wires)
+print(len(A_list[0]))
+
+# Matrix decoposition to Hamiltonian
+H_list = []
+for i in range(len(A_list)):
+    H_list.append(qml.pauli_decompose(A_list[i]))
+
+# obtain the density matrix after time evolution
+rho_list = []
+for i in range(len(H_list)):
+    rho_list.append(resizeMatrix(getDensityMatrix(H_list[i],1,10,n_wires),n_wires))
+
+print(rho_list)
+# example for running linear kernel
+
+clf1 = SVC(kernel = QJSK)
+clf1.fit(rho_list,y)
+print(f'Accuracy on Custom Kernel: {accuracy_score(y, clf1.predict(rho_list))}')
 
 # https://docs.pennylane.ai/en/stable/code/api/pennylane.pauli_decompose.html
 
-H = qml.pauli_decompose(A) # Simple and fast solution
-H1 = qml.pauli_decompose(A_list[6])
-print(H)  # The Hamiltonian of the graph
-print("Obtain circuit coefficients") # The coefficient for the circuits
-print(H.coeffs)
-print("Time evolution of the Hamiltonian System") # time evolution of H 
-time = 0
-n = 100
-qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
+# H = qml.pauli_decompose(A) # Simple and fast solution
+# H1 = qml.pauli_decompose(A_list[6])
+# print(H)  # The Hamiltonian of the graph
+# print("Obtain circuit coefficients") # The coefficient for the circuits
+# print(H.coeffs)
+# print("Time evolution of the Hamiltonian System") # time evolution of H 
+# time = 0
+# n = 100
+# qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
 
-r1 = getTimeEvolution(H, 1,10, wires)
-r11 = getTimeEvolution(H, 1,20, wires)
+# r1 = getTimeEvolution(H, 1,10, wires)
+# r11 = getTimeEvolution(H, 1,20, wires)
 
-r2 = getDensityMatrix(H, 1,10, wires)
-r22 = getDensityMatrix(H1, 1,10, wires)
-print("Density Matrix")
-print(r2+r22)
-print("Von Neuman Entropy")
-# print(von_neumann_entropy((r2+r22)/2))
-print(QJSK(r2,r22))
+# r2 = getDensityMatrix(H, 1,10, wires)
+# r22 = getDensityMatrix(H1, 1,10, wires)
+# print("Density Matrix")
+# print(r2+r22)
+# print("Von Neuman Entropy")
+# # print(von_neumann_entropy((r2+r22)/2))
+# print(QJSK(r2,r22))
 
-r3 = getEntropy(H,1,10, wires )
-r4 = []
-for i in range(len(r1)):
-    r4.append(r1[i]*r11[i])
-print(r4)
+# r3 = getEntropy(H,1,10, wires )
+# r4 = []
+# for i in range(len(r1)):
+#     r4.append(r1[i]*r11[i])
+# print(r4)
 
-# def circuit(params):
-#     qml.BasisState(np.array([1, 1, 1, 1,0,0, 0, 0, 1, 1, 1, 1,0,0, 0, 0]), wires=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
-#     qml.DoubleExcitation(params, wire s=[0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14,15])
-#     return qml.expval(H)
-
-# params = np.array(0.20885146442480412, requires_grad=True)
-# circuit(params)
-
-# explanation for the process. 
 # https://quantumcomputing.stackexchange.com/questions/11899/how-can-i-decompose-a-matrix-in-terms-of-pauli-matrices
