@@ -108,12 +108,16 @@ def von_neumann_entropy(rho):
 
 # self defined kenerl 
 def QJSD(rho,sigma):
-    phi = []
-    for i in range(len(rho)):
-        t = []
-        for j in range(len(rho[i])):
-            t.append((rho[i][j]+sigma[i][j])/2)
-        phi.append(t)
+    phi = (np.array(rho)+np.array(sigma))/2
+    # print(phi[0])
+    # print(phi[1])
+    # for i in range(len(rho)):
+    #     t = np.array
+    #     for j in range(len(rho[i])):
+    #         t.append((rho[i][j]+sigma[i][j])/2)
+    #     phi.append(t)
+    # phi = (rho+sigma)/2
+    # phi = resizeMatrix(phi,5)
     s = von_neumann_entropy(phi)
     a = von_neumann_entropy(rho)/2
     b = von_neumann_entropy(sigma)/2
@@ -121,6 +125,27 @@ def QJSD(rho,sigma):
 
 def QJSK(rho,sigma):
     r = []
+    print(len(rho))
+    print(len(sigma))
     for i in range(len(rho)):
-        r.append(QJSD(rho[i],sigma[i]))
+        von = QJSD(rho[i],sigma[i])
+        re = von.real
+        im = von.imag
+        r.append([re+im])
+    print(len(sigma))
     return r
+
+# def QJSK(rho,sigma):
+#     r = []
+#     von = QJSD(rho,sigma)
+#     re = von.real
+#     im = von.imag
+#     r.append([re])
+#     return r
+
+from sklearn.datasets import make_classification
+
+x,y = make_classification(n_samples = 1000)
+print(x.shape, y.shape)
+print(x)
+print(y)

@@ -52,7 +52,7 @@ print(len(A_list[0]))
 
 # Matrix decoposition to Hamiltonian
 H_list = []
-for i in range(len(A_list)):
+for i in range(len(A_list)-180):
     H_list.append(qml.pauli_decompose(A_list[i]))
 
 # obtain the density matrix after time evolution
@@ -63,13 +63,22 @@ for i in range(len(H_list)):
 print(rho_list)
 # example for running linear kernel
 
+for i in range(7):
+    print(rho_list[i].shape)
 
-# clf1 = SVC(kernel = QJSK)
-# clf1.fit(rho_list,y)
+y = y[:7]
+rho_list = rho_list[:7]
 
-clf1 = SVC(kernel = 'precomputed')
-clf1.fit(QJSK(rho_list,rho_list),y)
+print(rho_list[0])
+print(rho_list[1])
 
+clf1 = SVC(kernel = QJSK)
+print(QJSD(rho_list[0],rho_list[1]))
+print("Fitting")
+clf1.fit(rho_list,y)
+
+# clf1 = SVC(kernel = 'precomputed')
+# clf1.fit(QJSK(rho_list,rho_list),y)
 
 print(f'Accuracy on Custom Kernel: {accuracy_score(y, clf1.predict(rho_list))}')
 
