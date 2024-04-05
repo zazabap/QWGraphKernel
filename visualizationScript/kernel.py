@@ -109,19 +109,22 @@ def von_neumann_entropy(rho):
 # self defined kenerl 
 def QJSD(rho,sigma):
     phi = (np.array(rho)+np.array(sigma))/2
-    # print(phi[0])
-    # print(phi[1])
-    # for i in range(len(rho)):
-    #     t = np.array
-    #     for j in range(len(rho[i])):
-    #         t.append((rho[i][j]+sigma[i][j])/2)
-    #     phi.append(t)
-    # phi = (rho+sigma)/2
-    # phi = resizeMatrix(phi,5)
     s = von_neumann_entropy(phi)
     a = von_neumann_entropy(rho)/2
     b = von_neumann_entropy(sigma)/2
     return s-a-b
+
+def QJSD_kernel(X, Y):
+    # Compute the QJSD kernel matrix between two sets of samples X and Y
+    n_samples_X = len(X)
+    n_samples_Y = len(Y)
+    K = np.zeros((n_samples_X, n_samples_Y))
+
+    for i in range(n_samples_X):
+        for j in range(n_samples_Y):
+            K[i, j] = QJSD(X[i], Y[j])
+
+    return K
 
 def QJSK(rho,sigma):
     r = []
