@@ -31,7 +31,7 @@ e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 
 # quickView(mutag_A, mutag_node, mutag_node_label)
 # quickView(e_A, e_node, e_node_label)
-# quickView(p_A, p_node, p_node_label)
+quickView(p_A, p_node, p_node_label)
 
 A_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 
@@ -60,6 +60,8 @@ rho_list = []
 for i in range(len(H_list)):
     rho_list.append(resizeMatrix(getDensityMatrix(H_list[i],1,10,n_wires),n_wires))
 
+rho_list = rho_list[:7]
+y = y[:7]
 # example for running linear kernel
 clf1 = SVC(kernel = QJSD_kernel)
 print("Fitting")
