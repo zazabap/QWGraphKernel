@@ -1,20 +1,28 @@
-from sklearn.datasets import make_moons
-from sklearn_extra.cluster import KernelKMeans
+from sklearn.cluster import KMeans
+import numpy as np
 import matplotlib.pyplot as plt
 
-# Generate synthetic data (moons)
-X, _ = make_moons(n_samples=300, noise=0.1, random_state=42)
+# Generate some random data
+np.random.seed(0)
+X = np.random.randn(100, 2)
 
-# Kernel K-means clustering
-kernel_kmeans = KernelKMeans(n_clusters=2, kernel="rbf", gamma=1)
-kernel_kmeans.fit(X)
+# Define the number of clusters (k)
+k = 3
 
-# Plotting the results
-plt.figure(figsize=(8, 6))
-plt.scatter(X[:, 0], X[:, 1], c=kernel_kmeans.labels_, cmap='viridis', s=50, alpha=0.8)
-plt.scatter(kernel_kmeans.cluster_centers_[:, 0], kernel_kmeans.cluster_centers_[:, 1], s=200, c='red', marker='X', label='Cluster Centers')
-plt.title('Kernel K-means Clustering')
+# Initialize the KMeans object
+kmeans = KMeans(n_clusters=k)
+
+# Fit the data
+kmeans.fit(X)
+
+# Get the cluster centroids and labels
+centroids = kmeans.cluster_centers_
+labels = kmeans.labels_
+
+# Visualize the clusters
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis')
+plt.scatter(centroids[:, 0], centroids[:, 1], marker='x', color='red')
+plt.title('K-means Clustering')
 plt.xlabel('Feature 1')
 plt.ylabel('Feature 2')
-plt.legend()
 plt.show()

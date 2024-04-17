@@ -83,6 +83,24 @@ def quickView(file_A, file_node, file_node_label):
 
     plt.show()
 
+def coraSubVisual(G, G_list):
+
+    # Create a graph
+    plt.figure(figsize=(15,10))
+    colors = ['red', 'orange', 'yellow', 
+          'green', 'blue','skyblue',
+          'violet', 'brown', 'gray']
+
+    for i in range(9):
+        plt.subplot(3,3,1+i)
+        pos = nx.spring_layout(G_list[i])
+        node_labels = nx.get_node_attributes(G_list[i],'label')
+        nx.draw(G_list[i], pos, with_labels=True, node_color=colors[i], node_size=200, font_weight='bold', font_size=10)
+        nx.draw_networkx_labels(G,pos,labels=node_labels)
+        plt.title(f'Graph {i+1}')    
+
+    plt.show()
+
 # Self defined random walk function 
 # on graph define the steps on adj_matrix
 def random_walk_steps(adj_matrix, steps, num_walks):
