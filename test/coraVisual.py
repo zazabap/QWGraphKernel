@@ -89,6 +89,8 @@ A_list = get_A_list(G,1,32)
 print(A_list[0])
 print(len(A_list))
 print(len(labels))
+A_list = A_list[:25]
+labels = labels[:25]
 H_list = []
 for i in range(len(A_list)):
     H_list.append(qml.pauli_decompose(A_list[i]))
@@ -99,11 +101,11 @@ rho_list = []
 for i in range(len(H_list)):
     rho_list.append(resizeMatrix(getDensityMatrix(H_list[i],1,10,n_wires),n_wires))
 
-rho_list_test = rho_list[1600:2000]
-y_test = labels[1600:2000]
+rho_list_test = rho_list[16:20]
+y_test = labels[16:20]
 
-rho_list = rho_list[:1600]
-y = labels[:1600]
+rho_list = rho_list[:16]
+y = labels[:16]
 
 print(len(rho_list_test))
 print(len(y_test))
