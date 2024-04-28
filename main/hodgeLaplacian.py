@@ -117,9 +117,8 @@ def HLMatrices(file_A, file_node, file_node_label, file_graph_labels):
         nx.set_node_attributes(G, node_attr)
 
     # Calculate the eigenvalue of the matrices
-
-
     return HL_list, y
+
 
 def graphHelmholtzian(G):
     # I is the incidence matrix 
