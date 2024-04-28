@@ -73,7 +73,8 @@ def resizeMatrix(M,n):
     """
     m = len(M)
     new_size = 2 ** n
-
+    if m> new_size: return M[:new_size, :new_size]
+        
     # Create a new matrix O of size (2^n) x (2^n) filled with zeros
     O = np.zeros((new_size, new_size), dtype=M.dtype)
 
