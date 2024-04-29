@@ -25,7 +25,8 @@ e_A = '../data/ENZYMES/ENZYMES_A.txt'
 e_node = '../data/ENZYMES/ENZYMES_graph_indicator.txt'
 e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 
-# Give a list of laplacian matrices# L_list, y = LaplacianMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
+# Give a list of laplacian matrices
+# L_list, y = LaplacianMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 # L_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 L_list, y = HLMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 

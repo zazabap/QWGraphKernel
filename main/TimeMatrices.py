@@ -1,7 +1,7 @@
 ################################################    
 # Author: SHiwen An.                           #
-# Date: 2023-12-14.                            #
-# Purpose: Script to load MUTAG data           #
+# Date: 2024-04-29.                            #
+# Purpose: Time Matrices save to numpy form    #
 ################################################    
 
 from lib import *
