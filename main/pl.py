@@ -34,7 +34,7 @@ def getTimeEvolution(H,t,n, w):
     return circuit(t,n)
 
 # Density Matrix calculation
-def getDensityMatrix(H,t,n, w):
+def getDensityMatrix(H,t,n,w):
     """
     Get the Density Matrix for the Hamiltonian System
 
@@ -52,7 +52,7 @@ def getDensityMatrix(H,t,n, w):
 
     @qml.qnode(dev)
     def circuit(time,ndiv):
-        ApproxTimeEvolution(H,time,ndiv )
+        ApproxTimeEvolution(H,time,ndiv)
         return qml.density_matrix(range(n_wires))
     
     return circuit(t,n)

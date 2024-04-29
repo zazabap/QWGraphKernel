@@ -137,22 +137,23 @@ def graphHelmholtzian(G):
                 if G.has_edge(w, u):
                     triangles.append((u, v, w))
 
-
+    ee = G.edges()
     # Iterate over each triangle
     for triangle in triangles:
         u, v, w = triangle
         # Determine the clockwise orientation of the triangle
-        clockwise = (u, v) in G.edges() and (v, w) in edges and (w, u) in edges
+        clockwise = (u, v) in ee and (v, w) in ee and (w, u) in ee
         # Assign edge values based on their direction relative to the clockwise orientation
-        for edge_idx, edge in enumerate(G.edges()):
+        for edge_idx, edge in enumerate(ee):
             if edge in [(u, v), (v, w), (w, u)]:
                 edge_values[edge_idx] = -1 if clockwise else 1
     
 
     H = A @ A.transpose() + edge_values @ edge_values.T
 
-    print(A @ A.transpose())
-    print(edge_values @ edge_values.T)
-    print(H)
+    # Debug purpose
+    # print(A @ A.transpose())
+    # print(edge_values @ edge_values.T)
+    # print(H)
 
     return H 

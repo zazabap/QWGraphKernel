@@ -7,12 +7,10 @@
 from pl import *
 import numpy as np
 from sklearn.datasets import make_classification
-
-x,y = make_classification(n_samples = 1000)
+from scipy import linalg as la
 
 def linear_kernel(x_i, x_j):
     return x_i.dot(x_j.T)
-
 
 def appendZeros(M):
     """
@@ -102,7 +100,6 @@ def von_neumann_entropy(rho):
     >>> print(entropy)
     1.0
     """
-    from scipy import linalg as la
     R = rho*(la.logm(rho)/la.logm(np.matrix([[2]])))
     S = -np.matrix.trace(R)
     return(S)
@@ -138,18 +135,3 @@ def QJSK(rho,sigma):
         r.append([re+im])
     print(len(sigma))
     return r
-
-# def QJSK(rho,sigma):
-#     r = []
-#     von = QJSD(rho,sigma)
-#     re = von.real
-#     im = von.imag
-#     r.append([re])
-#     return r
-
-from sklearn.datasets import make_classification
-
-x,y = make_classification(n_samples = 1000)
-print(x.shape, y.shape)
-print(x)
-print(y)

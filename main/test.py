@@ -37,9 +37,9 @@ e_node_label = '../data/ENZYMES/ENZYMES_node_labels.txt'
 A_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 
 # print
-print("Length of the graph:")
-print(len(A_list))
-print(len(y))
+# print("Length of the graph:")
+# print(len(A_list))
+# print(len(y))
 
 A, wires =  appendZeros(A_list[7])
 

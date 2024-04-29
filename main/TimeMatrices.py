@@ -41,43 +41,23 @@ H_list = []
 for i in range(len(L_list)):
     H_list.append(qml.pauli_decompose(L_list[i]))
 
-print("Time Evoluton")
-start_time = time.time()
 # obtain the density matrix after time evolution
-rho_list = []
+# rho_list = []
 
-for i in range(len(H_list)):
-    rho_list.append(getDensityMatrix(H_list[i],1,10,n_wires))
-end_time = time.time()
-elapsed_time = end_time - start_time
-print(rho_list[0])
-print(rho_list[1])
+for t in range(10):
+    rho_list = []
+    print(f"Time Evolution {t}")  # Corrected the string formatting
+    start_time = time.time()
+    for i in range(len(H_list)):
+        print(f"r{i}")  # Corrected the string formatting
+        rho_list.append(getDensityMatrix(H_list[i],t+1,100,n_wires))
 
-print(f"Elapsed time: {elapsed_time} seconds")
+    print("Evolution done")
+    np.savez(f'matrix_list_{t}.npz', *rho_list)  # Corrected the filename formatting
 
-print("Start Trainning SVC")
-start_time = time.time()
-# example for running linear kernel
-clf1 = SVC(kernel = QJSD_kernel)
-print("Fitting")
-clf1.fit(rho_list,y)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(rho_list[0])
+    print(rho_list[1])
 
-print(f'Accuracy on Custom Kernel: {accuracy_score(y, clf1.predict(rho_list))}')
-end_time = time.time()
-elapsed_time = end_time - start_time
-print(f"Elapsed time: {elapsed_time} seconds")
-
-# Partial reference of the code: 
-# https://docs.pennylane.ai/en/stable/code/api/pennylane.pauli_decompose.html
-# https://quantumcomputing.stackexchange.com/questions/11899/how-can-i-decompose-a-matrix-in-terms-of-pauli-matrices
-
-# H = qml.pauli_decompose(A) # Simple and fast solution
-# H1 = qml.pauli_decompose(L_list[6])
-# print(H)  # The Hamiltonian of the graph
-# print("Obtain circuit coefficients") # The coefficient for the circuits
-# print(H.coeffs)
-# print("Time evolution of the Hamiltonian System") # time evolution of H 
-# time = 0
-# n = 100
-# qml.adjoint(qml.TrotterProduct(H,time, order=1, n =n))
-
+    print(f"Elapsed time: {elapsed_time} seconds")
