@@ -18,12 +18,12 @@ mutag_node_label = '../data/MUTAG/MUTAG_node_labels.txt'
 mutag_graph_label = '../data/MUTAG/MUTAG_graph_labels.txt'
 
 def load_matrix_list(t):
-    loaded_data = np.load(f'matrix_list_{t}.npz')
+    loaded_data = np.load(f'../timeEvolution/matrix_list_{t}.npz')
     rho_list = [loaded_data[f'arr_{i}'] for i in range(len(loaded_data.files))]
     return rho_list
 
 # Load the list of matrices from the single file
-rho_list = load_matrix_list(3)
+rho_list = load_matrix_list(6)
 print(rho_list)
 L_list, y = adjacencyMatrices(mutag_A, mutag_node, mutag_node_label, mutag_graph_label)
 
