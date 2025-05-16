@@ -8,7 +8,7 @@ import random
 
 from visual import (plot_all_matrices_with_pca, visualize_graph, 
                     plot_star_and_random_with_pca, visualize_bloch_vectors, 
-                    visualize_parameters, plot_random_with_pca_3d)
+                    visualize_parameters, plot_random_with_pca_3d, plot_three_matrix_lists_with_pca_3d)
 # from visual import *
 
 # Function to create SU(2) matrix given theta, phi, psi
@@ -137,6 +137,24 @@ def generate_subgroup_from_generators(matrices_random, max_steps=1000, tol=1e-8)
             flat_subgroup.append(flat_candidate)
     return subgroup
 
+def multiply_all_matrices(matrices_random):
+    """
+    Multiplies all matrices in matrices_random in order and returns the resulting matrix.
+
+    Parameters:
+        matrices_random (dict): Dictionary of SU(2) matrices (complex 2x2).
+
+    Returns:
+        np.ndarray: The product of all matrices (2x2 complex matrix).
+    """
+    matrices = list(matrices_random.values())
+    if not matrices:
+        raise ValueError("matrices_random is empty.")
+    result = matrices[0]
+    for mat in matrices[1:]:
+        result = np.dot(result, mat)
+    return result
+
 # Example 1: Cycle Graph (10 nodes)
 G_cycle = nx.cycle_graph(10)
 theta_cycle, phi_cycle, psi_cycle = assign_parameters(G_cycle)
@@ -172,12 +190,23 @@ matrices_random = {node: su2_matrix(theta_random[node], phi_random[node], psi_ra
 # Call the function to plot all matrices
 
 N = 100
-# matrices_cycle = extend_matrices_random(matrices_cycle, num_new_matrices=N)
-# matrices_star = extend_matrices_random(matrices_star, num_new_matrices=N)  
 
-# matrices_random = extend_matrices_random(matrices_random, num_new_matrices=N)
 subgroup = generate_subgroup_from_generators(matrices_random, max_steps=2000)
+gen_random = multiply_all_matrices(matrices_random)
+gen_random /= np.linalg.norm(gen_random) if np.linalg.norm(gen_random) != 0 else 1
 
+gen_star = multiply_all_matrices(matrices_star)
+gen_star /= np.linalg.norm(gen_star) if np.linalg.norm(gen_star) != 0 else 1
+
+gen_cycle = multiply_all_matrices(matrices_cycle)
+gen_cycle /= np.linalg.norm(gen_cycle) if np.linalg.norm(gen_cycle) != 0 else 1
+
+print("Random Matrix:")
+print(gen_random)
+print("Star Matrix:")
+print(gen_star)      
+print("Cycle Matrix:")
+print(gen_cycle)   
 # plot_star_and_random_with_pca(matrices_star, matrices_random)
 # plot_all_matrices_with_pca(matrices_cycle, matrices_star, matrices_random)
 
@@ -187,10 +216,19 @@ subgroup = generate_subgroup_from_generators(matrices_random, max_steps=2000)
 # for i in range(10):
 #     matrix_powers.extend(generate_matrix_powers([matrices_random[i]], N))
 
-# print(len(matrix_powers))
-print(len(subgroup))
+k = 100
+cyc_powers = []
+star_powers = []
+ran_powers = []
+print("Generating matrix powers...")
 
-plot_random_with_pca_3d(subgroup)
+cyc_powers.extend(generate_matrix_powers([gen_cycle], k))
+star_powers.extend(generate_matrix_powers([gen_star], k))
+ran_powers.extend(generate_matrix_powers([gen_random], k))
+
+plot_three_matrix_lists_with_pca_3d(cyc_powers, star_powers, ran_powers,  labels=('cycle graph', 'star graph', 'random graph'))
+# print(len(matrix_powers))
+
 
 # Example usage:
 # subgroup_elements = generate_subgroup_from_generators(matrices_random, max_steps=2000)
